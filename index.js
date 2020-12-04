@@ -49,6 +49,15 @@ client.connect(err => {
           res.send(result.modifiedCount > 0)
       })
     })
+
+    //delete data
+    app.delete('/delete/:id',(req, res) =>{
+        // console.log(req.params.id)
+        contactCollection.deleteOne({_id: ObjectId(req.params.id)})
+        .then(result => {
+            res.send(result.deletedCount > 0);
+        })
+
 });
 
 
