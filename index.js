@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
 require('dotenv').config()
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jos17.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
@@ -36,6 +37,17 @@ client.connect(err => {
             .toArray((err, documents) => {
                 res.send(documents)
             })
+    })
+
+    //update data
+    app.patch('/update/:id', (req, res) => {
+        contactCollection.updateOne({_id: ObjectId(req.params.id)},
+        {
+          $set: {name: req.body.name, phone: req.body.phone, email: req.body.email}
+        } )
+        .then(result => {
+          res.send(result.modifiedCount > 0)
+      })
     })
 });
 
